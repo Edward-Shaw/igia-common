@@ -10,4 +10,7 @@ public class Const {
 	//微信管理后台的用户分组
 	public static final long GROUP_TEACHER = 100;
 	public static final long GROUP_PARENT = 101;
+
+	public static final String STATE_DELETED = "DELETED"; //已删除
+	
 }
