@@ -30,6 +30,11 @@ public class User implements Serializable {
 	private String password;
 	
 	/**
+	 * 特定算法生成的用户唯一的编码，用于替换复杂的Mongodb的id
+	 */
+	private String code;
+	
+	/**
 	 * 是否被禁用
 	 */
 	private boolean banned;
@@ -212,6 +217,14 @@ public class User implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }
