@@ -1,6 +1,4 @@
-package com.cloume.shaw.igia.common.utils;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package com.cloume.shaw.igia.common.rest;
 
 public class RestResponse<RT> {
 	
@@ -55,10 +53,5 @@ public class RestResponse<RT> {
 	
 	public static <T> RestResponse<T> bad(int code, String message) {
 		return result(code, message, null);
-	}
-
-	@JsonIgnore
-	public boolean isBad() {
-		return getCode() < 0;
 	}
 }
