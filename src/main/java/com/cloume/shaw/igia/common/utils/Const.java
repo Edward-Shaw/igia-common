@@ -12,5 +12,15 @@ public class Const {
 	public static final long GROUP_PARENT = 101;
 
 	public static final String STATE_DELETED = "DELETED"; //已删除
+	public static final String STATE_PUBLISHED = "已发布";
+	public static final String STATE_UNPUBLISHED = "未发布";
+	public static final String STATE_UNKNOWN = "未知状态";
 	
+	public static final String COURSE_PAINTING = "绘画";
+	public static final String COURSE_DANCE = "舞蹈";
+	public static final String COURSE_TAEKWONDO = "跆拳道";
+	public static final String COURSE_YOGA = "瑜伽";
+	public static final String COURSE_SCIENCE = "语言与科技";
+	public static final String COURSE_CAMP = "寒暑假集训";
+	public static final String COURSE_UNKNOWN = "未分类";
 }
