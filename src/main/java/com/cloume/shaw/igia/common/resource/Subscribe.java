@@ -23,8 +23,8 @@ public class Subscribe {
 	//预约创建时间
 	private long createTime;
 	
-	//预约的活动列表
-	private ArrayList<Item> items = new ArrayList<>();
+	//预约的活动编号（code）列表
+	private ArrayList<String> courses = new ArrayList<>();
 	
 	//预约的活动时间
 	private long subscribeTime;
@@ -34,14 +34,6 @@ public class Subscribe {
 	
 	//预约活动班级
 	private String subscribeClass;
-	
-	public void addItem(Item item){
-		this.items.add(item);
-	}
-	
-	public ArrayList<Item> getItems(){
-		return this.items;
-	}
 
 	public long getCreateTime() {
 		return createTime;
@@ -89,6 +81,14 @@ public class Subscribe {
 
 	public void setSubscribeClass(String subscribeClass) {
 		this.subscribeClass = subscribeClass;
+	}
+
+	public ArrayList<String> getCourses() {
+		return courses;
+	}
+
+	public void setCourses(ArrayList<String> courses) {
+		this.courses = courses;
 	}
 
 	public class SimpleUser{
@@ -142,34 +142,5 @@ public class Subscribe {
 		}
 		
 	}
-	
-	public class Item{
-		
-		public Item(String category, String detail){
-			this.category = category;
-			this.detail = detail;
-		}
-		
-		//预约的活动类别
-		private String category;
-		
-		//预约的活动详情，大类别下的具体子类活动
-		private String detail;
 
-		public String getCategory() {
-			return category;
-		}
-
-		public void setCategory(String category) {
-			this.category = category;
-		}
-
-		public String getDetail() {
-			return detail;
-		}
-
-		public void setDetail(String detail) {
-			this.detail = detail;
-		}
-	}
 }
