@@ -16,11 +16,11 @@ public class Const {
 	public static final String STATE_UNPUBLISHED = "未发布";
 	public static final String STATE_UNKNOWN = "未知状态";
 	
-	public static final String COURSE_PAINTING = "绘画";
-	public static final String COURSE_DANCE = "舞蹈";
-	public static final String COURSE_TAEKWONDO = "跆拳道";
-	public static final String COURSE_YOGA = "瑜伽";
-	public static final String COURSE_SCIENCE = "语言与科技";
-	public static final String COURSE_CAMP = "寒暑假集训";
-	public static final String COURSE_UNKNOWN = "未分类";
+	public static final String COURSE_PAINTING = "绘画";  // 0
+	public static final String COURSE_DANCE = "舞蹈";  // 1
+	public static final String COURSE_TAEKWONDO = "跆拳道";  //2
+	public static final String COURSE_YOGA = "瑜伽";  //3
+	public static final String COURSE_SCIENCE = "语言与科技";  //4
+	public static final String COURSE_CAMP = "寒暑假集训";  //5
+	public static final String COURSE_UNKNOWN = "未分类";  //?
 }
