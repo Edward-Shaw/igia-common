@@ -8,12 +8,13 @@ import java.util.Map.Entry;
  *
  */
 public interface IConverter {
+
 	/**
 	 * @param name 待转换属性名
 	 * @param value 待转换的属性值（实例）
-	 * @return 转换之后的键和值（实例），键也可以修改
+	 * @return 转换之后的值（实例）
 	 */
-	Entry<String, Object> convert(String key, Object value);
+	public Object convert(String name, Object value);
 	
 	default Entry<String, Object> pair(String key, Object value) {
 		return new SimpleEntry(key, value);

@@ -4,7 +4,10 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
+
+import org.apache.log4j.Logger;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Updater<T> {
 	
@@ -13,77 +16,58 @@ public class Updater<T> {
 		this.object = object;
 	}
 	
-	/**
-	 * 将form中的key理解为属性名，value理解为新的值，更新到当前对象中。
-	 * 因此必须注意：如果某个key不是基本类型，是个复杂类型的话，必须使用 {@link com.cloume.hsep.beanutils2.Updater.update(Map<String, Object>, IConverter) }
-	 * 通过converter进行转换。
-	 * 如果仅仅是因为@JsonProperty这样的注解或者其他原因使key和属性名不一致，使用{@link com.cloume.hsep.beanutils2.Updater.mapping(String, String) }方法可以解决。
-	 * @param from
-	 * @return
-	 */
 	public T update(Map<String, Object> from){
 		return update(from, null);
 	}
 	
-	protected Field getField(T object, String fieldName){
-		//return org.apache.commons.lang.reflect.FieldUtils.getDeclaredField(object.getClass(), fieldName, true);
-		Field result = ClassFields.getField(fieldName, object.getClass());
-		if(result != null) {
-			result.setAccessible(true);
-		}
-
-		if(result == null) {
-			System.err.println(String.format("can not found field %s on object %s", fieldName, object));
-		}
-
-		return result;
-    }
-	
-	private Map<String, String> keyMapping;
-	protected Map<String, String> getKeyMapping(){
-		return keyMapping == null ? keyMapping = new HashMap<String, String>() : keyMapping;
-	}
-	
-	/**
-	 * @param from 有可能是注解别名，比如JsonProperty注解的名字
-	 * @param to 类的field名
-	 * @return
-	 */
-	public Updater<T> mapping(String from, String to){
-		getKeyMapping().put(from, to);
-		return this;
-	}
-	
-	/**
-	 * 
-	 * @param from
-	 * @param converter 如果某个key不是基本类型，是个复杂类型的话，通过converter进行转换。
-	 * @return
-	 */
 	public T update(Map<String, Object> from, IConverter converter){
+		
+		///记录通过field name没有匹配成功的
+		Map<String, Object> missed = new HashMap<String, Object>();
+		
 		///尝试body中的每一个key
 		for(Iterator<String> iterator = from.keySet().iterator(); iterator.hasNext(); ){
 			String key = iterator.next();
-			Object value = from.get(key);
 			
-			Field field = getField(this.object, getKeyMapping().containsKey(key) ? getKeyMapping().get(key) : key);
-			if(converter != null){ 
-				Entry<String, Object> converted = converter.convert(key, value);
-				if(converted != null) {
-					value = converted.getValue();
-					if(!key.equals(converted.getKey())) {
-						key = converted.getKey();
-						field = getField(this.object, getKeyMapping().containsKey(key) ? getKeyMapping().get(key) : key);
-					}
-				}
+			Field field = null;
+			try{ field = object.getClass().getDeclaredField(key); }catch(Exception e){ }
+			if(field == null) {
+				missed.put(key, from.get(key));
+				continue;
 			}
 			
-			if(field == null) { continue; }
-			
+			Object value = from.get(key);
+			boolean accessible = field.isAccessible();
+			field.setAccessible(true);
 			try{
+				if(converter != null){ value = converter.convert(key, value); }
 				field.set(object, value); 
 			} catch(Exception e) { 
-				System.err.println(String.format("failed set field %s to value %s", key, value));
+				Logger.getLogger(getClass()).error(String.format("failed set field %s to value %s", key, value), e);
+			}
+			field.setAccessible(accessible);
+		}
+		
+		///尝试被JsonProperty标注的属性
+		Field[] fields = object.getClass().getDeclaredFields();
+		for(int i = 0; i < fields.length && !missed.isEmpty(); i++){
+			Field field = fields[i];
+			JsonProperty annotation = field.getAnnotation(JsonProperty.class);
+			if(annotation != null){
+				String key = annotation.value();
+				if(missed.containsKey(key)){
+					Object value = from.get(key);
+					boolean accessible = field.isAccessible();
+					field.setAccessible(true);
+					try{ 
+						if(converter != null){ value = converter.convert(key, value); }
+						field.set(object, value); 
+					} catch(Exception e) {
+						Logger.getLogger(getClass()).error(String.format("failed set field %s to value %s", key, value), e);
+					}
+					field.setAccessible(accessible);
+					missed.remove(key);
+				}
 			}
 		}
 		
