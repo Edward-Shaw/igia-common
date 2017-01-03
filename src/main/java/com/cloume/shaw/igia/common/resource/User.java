@@ -40,6 +40,11 @@ public class User implements Serializable {
 	private boolean banned;
 	
 	/**
+	 * 用户状态
+	 */
+	private String state;
+	
+	/**
 	 * 被认证情况
 	 */
 	private Authentication authentication;
@@ -225,6 +230,14 @@ public class User implements Serializable {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 }
